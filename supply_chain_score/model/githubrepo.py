@@ -8,13 +8,15 @@ class GithubRepo(Repo):
     """
     GithubRepo class.
     """
+    max_elements_per_page = 100
+    max_pages = 10
 
     def __init__(self, ctx, url):
         """
         Initialize GithubRepo class.
         """
         super().__init__(ctx, url)
-        
+                
         
     def get_owner(self):
         """
@@ -51,9 +53,9 @@ class GithubRepo(Repo):
         
         data = json.loads(response.data.decode('utf-8'))
         page_number = 1
-        # max number of elements per page is 30. 
-        # If there are 30 elements in the response, there are more pages.
-        paginate = len(data) == 30
+        # max number of elements per page is self.max_elements_per_page. 
+        # If there are self.max_elements_per_page elements in the response, there are more pages.
+        paginate = len(data) == self.max_elements_per_page
         while paginate:
             page_number += 1
             try: 
@@ -64,7 +66,7 @@ class GithubRepo(Repo):
             except urllib3.exceptions.MaxRetryError:
                 return data
             new_data = json.loads(response.data.decode('utf-8'))
-            paginate = len(new_data) == 30
+            paginate = len(new_data) == self.max_elements_per_page and page_number < self.max_pages
             data.extend(new_data)    
         self.ctx.logger.info("Number of elements retrived: {}".format(len(data)))        
         return data
@@ -73,7 +75,7 @@ class GithubRepo(Repo):
     def get_api_url(self, api_endpoint, extra_params):
         url = api_endpoint+"?"
         url += "{}&".format(extra_params) if extra_params else "" 
-        url += "per_page=100"
+        url += "per_page={}".format(self.max_elements_per_page)
         return url
 
 

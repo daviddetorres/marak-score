@@ -30,6 +30,7 @@ class Repo:
         info += "  Number of Contributors: {0}\n".format(len(self.contributors))
         info += "  Number of Forks: {0}\n".format(len(self.forks))
         info += "  Number of Releases: {0}\n".format(len(self.releases))
+        info += "  Number of Issues: {0}\n".format(len(self.issues))
 
         return info
 
