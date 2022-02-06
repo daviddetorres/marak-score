@@ -24,8 +24,15 @@ class Repo:
         """
         Return string representation of Repo object.
         """
-        return "Repo: {0}".format(self.name)
-      
+        info = "Repo: {0}\n".format(self.url)
+        info += "  Owner: {0}\n".format(self.owner)
+        info += "  Name: {0}\n".format(self.name)
+        info += "  Number of Contributors: {0}\n".format(len(self.contributors))
+        info += "  Number of Forks: {0}\n".format(len(self.forks))
+        info += "  Number of Releases: {0}\n".format(len(self.releases))
+
+        return info
+
     def get_contributors(self):
         """
         Return number of contributors for repo.

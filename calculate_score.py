@@ -31,9 +31,18 @@ def main():
     logger.info('Version: %s', VERSION)
 
     ctx = Context(logger)
-    logger.info('Reading info from the repo {}'.format(args.repo))
 
-    repository = GithubRepo(ctx, args.repo)
 
+    # Check if the repository is from a valid provider
+    # Currently only Github is supported
+    if args.repo.startswith('https://github.com/'):
+        logger.info('Reading info from the repo {}'.format(args.repo))
+        repository = GithubRepo(ctx, args.repo)
+    else: 
+        logger.error('Repository {} is not from a valid provider'.format(args.repo))
+        logger.error('Valid providers: Github')
+        exit(1)
+        
+    print(repository)
 if __name__ == '__main__':
     main()

@@ -34,16 +34,18 @@ class GithubRepo(Repo):
         self.ctx.logger.info(log_text.format(element_parsed))
         return element_parsed
         
-    def _paginated_api_call(self,api_endpoint): 
+    def _paginated_api_call(self,api_endpoint,extra_params=None):  # sourcery skip: class-extract-method
         """
         Makes a paginated call to get all the results of the call
         Docs on paginated responses here: https://docs.github.com/en/rest/guides/traversing-with-pagination
         """
         http = urllib3.PoolManager()
         headers = {'Accept': 'application/vnd.github.v3+json'}
+        url = self.get_api_url(api_endpoint, extra_params)
+        self.ctx.logger.info("Making first API call to {}".format(url))
         try: 
             response = http.request('GET', 
-                                    url=api_endpoint+"?per_page=100", 
+                                    url=url, 
                                     headers=headers)
         except urllib3.exceptions.MaxRetryError:
             return None
@@ -56,8 +58,9 @@ class GithubRepo(Repo):
         while paginate:
             page_number += 1
             try: 
+                self.ctx.logger.info("Making paginated API call to {}".format(url+"&page={}".format(page_number)))
                 response = http.request('GET', 
-                                        url=api_endpoint + "?per_page=100&page={}".format(page_number), 
+                                        url=api_endpoint + "&page={}".format(page_number), 
                                         headers=headers)
             except urllib3.exceptions.MaxRetryError:
                 return data
@@ -66,6 +69,14 @@ class GithubRepo(Repo):
             data.extend(new_data)    
         self.ctx.logger.info("Number of elements retrived: {}".format(len(data)))        
         return data
+
+    @classmethod
+    def get_api_url(self, api_endpoint, extra_params):
+        url = api_endpoint+"?"
+        url += "{}&".format(extra_params) if extra_params else "" 
+        url += "per_page=100"
+        return url
+
 
     def get_contributors(self):  # sourcery skip: class-extract-method
         """
@@ -96,3 +107,13 @@ class GithubRepo(Repo):
         self.ctx.logger.info("Getting releases for repo: {}".format(self.name))
         api_endpoint = "https://api.github.com/repos/{}/{}/releases".format(self.owner, self.name)
         return (self._paginated_api_call(api_endpoint))
+
+    def get_issues(self):
+        """
+        Return number of issues for repo using the 
+        Github API: https://docs.github.com/en/rest/reference/issues#list-issues
+        GET /repos/{owner}/{repo}/issues
+        """
+        self.ctx.logger.info("Getting issues for repo: {}".format(self.name))
+        api_endpoint = "https://api.github.com/repos/{}/{}/issues".format(self.owner, self.name)
+        return (self._paginated_api_call(api_endpoint, "state=all"))
