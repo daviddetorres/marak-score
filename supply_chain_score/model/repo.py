@@ -5,10 +5,11 @@ class Repo:
     Repo class.
     """
 
-    def __init__(self, url):
+    def __init__(self, ctx, url):
         """
         Initialize Repo class.
         """
+        self.ctx = ctx
         self.url = url
         self.owner = self.get_owner()
         self.name = self.get_name()
