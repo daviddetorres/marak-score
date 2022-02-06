@@ -1,4 +1,3 @@
-from email import header
 import urllib3
 from .repo import Repo
 import urllib3.request
@@ -60,7 +59,7 @@ class GithubRepo(Repo):
             try: 
                 self.ctx.logger.info("Making paginated API call to {}".format(url+"&page={}".format(page_number)))
                 response = http.request('GET', 
-                                        url=api_endpoint + "&page={}".format(page_number), 
+                                        url=url + "&page={}".format(page_number), 
                                         headers=headers)
             except urllib3.exceptions.MaxRetryError:
                 return data
