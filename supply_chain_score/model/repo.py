@@ -13,12 +13,7 @@ class Repo:
         self.url = url
         self.owner = self.get_owner()
         self.name = self.get_name()
-        self.contributors = self.get_contributors()
-        self.forks = self.get_forks()
-        self.releases = self.get_releases()
-        self.stars = self.get_stars()
-        self.issues = self.get_issues()
-        self.commits = self.get_commits()
+
 
     def __str__(self):
         """
@@ -27,12 +22,32 @@ class Repo:
         info = "Repo: {0}\n".format(self.url)
         info += "  Owner: {0}\n".format(self.owner)
         info += "  Name: {0}\n".format(self.name)
-        info += "  Number of Contributors: {0}\n".format(len(self.contributors))
-        info += "  Number of Forks: {0}\n".format(len(self.forks))
-        info += "  Number of Releases: {0}\n".format(len(self.releases))
-        info += "  Number of Issues: {0}\n".format(len(self.issues))
-
+        info += "  Number of Contributors: {0}\n".format(self.total_contributors)
+        info += "  Number of Forks: {0}\n".format(self.total_forks)
+        info += "  Number of Releases: {0}\n".format(self.total_releases)
+        info += "  Number of Issues: {0}\n".format(self.total_issues)
         return info
+
+    def get_data(self):
+        """
+        Return data for repo.
+        """
+        self.contributors = self.get_contributors()
+        self.forks = self.get_forks()
+        self.releases = self.get_releases()
+        self.issues = self.get_issues()
+        self.commits = self.get_commits()        
+        self.stars = self.get_stars()
+
+    def calculate_statistics(self):
+        """
+        Calculate statistics for repo.
+        """
+        self.total_contributors = self.get_total_contributors()
+        self.total_forks = self.get_total_forks()
+        self.total_releases = self.get_total_releases()
+        self.total_issues = self.get_total_issues()
+    
 
     def get_contributors(self):
         """
@@ -72,9 +87,32 @@ class Repo:
         """
         pass
     
+    def get_total_contributors(self):
+        """
+        Return total number of contributors for repo.
+        """
+        pass
+
+    def get_total_forks(self):
+        """
+        Return total number of forks for repo.
+        """
+        pass
+
+    def get_total_releases(self):
+        """
+        Return total number of releases for repo.
+        """
+        pass
+
+    def get_total_issues(self):
+        """
+        Return total number of issues for repo.
+        """
+        pass
+
     def get_score(self):
         """
         Return score for repo.
         """
         pass
-    

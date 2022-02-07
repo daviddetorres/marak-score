@@ -42,7 +42,10 @@ def main():
         logger.error('Repository {} is not from a valid provider'.format(args.repo))
         logger.error('Valid providers: Github')
         exit(1)
-        
+    
+    repository.get_data()
+    repository.calculate_statistics()
+            
     print(repository)
 if __name__ == '__main__':
     main()

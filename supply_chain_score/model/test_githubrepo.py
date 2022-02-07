@@ -1,4 +1,27 @@
 from .githubrepo import GithubRepo
+from .context import Context
+import logging
+import pytest
+
+@pytest.fixture
+def generate_ctx():
+    """
+    Fixture for Context object.
+    """
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.DEBUG)
+    logger = logging.getLogger(__name__)
+    return Context(logger)
+
+def test_init_with_url(generate_ctx):
+    """
+    Test init function.
+    """
+    url = "https://github.com/daviddetorres/supply-chain-score"
+    repo = GithubRepo(generate_ctx, url)
+    assert repo.url == url
+    assert repo.owner == "daviddetorres"
+    assert repo.name == "supply-chain-score"
 
 def test_get_api_url_with_extra_params():
     """

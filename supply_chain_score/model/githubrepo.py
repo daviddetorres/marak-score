@@ -118,3 +118,15 @@ class GithubRepo(Repo):
         self.ctx.logger.info("Getting issues for repo: {}".format(self.name))
         api_endpoint = "https://api.github.com/repos/{}/{}/issues".format(self.owner, self.name)
         return (self._paginated_api_call(api_endpoint, "state=all"))
+
+    def get_total_contributors(self):
+        return len(self.contributors)
+
+    def get_total_forks(self):
+        return len(self.forks)
+    
+    def get_total_releases(self):
+        return len(self.releases)
+
+    def get_total_issues(self):
+        return len(self.issues)
