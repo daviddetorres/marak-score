@@ -2,6 +2,7 @@ import urllib3
 from .repo import Repo
 import urllib3.request
 import json
+import datetime
 
 # child class of Repo for github repos
 class GithubRepo(Repo):
@@ -119,6 +120,16 @@ class GithubRepo(Repo):
         api_endpoint = "https://api.github.com/repos/{}/{}/issues".format(self.owner, self.name)
         return (self._paginated_api_call(api_endpoint, "state=all"))
 
+    def get_commits(self):
+        """
+        Return number of commits for repo using the 
+        Github API: https://docs.github.com/en/rest/reference/repos#list-commits
+        GET /repos/{owner}/{repo}/commits
+        """
+        self.ctx.logger.info("Getting commits for repo: {}".format(self.name))
+        api_endpoint = "https://api.github.com/repos/{}/{}/commits".format(self.owner, self.name)
+        return (self._paginated_api_call(api_endpoint))
+
     def get_total_contributors(self):
         return len(self.contributors)
 
@@ -130,3 +141,13 @@ class GithubRepo(Repo):
 
     def get_total_issues(self):
         return len(self.issues)
+
+    def get_total_commits(self):
+        return len(self.commits)
+
+    def is_commit_before_date(self,commit,date):
+        """
+        Return True if the commit is before the date.
+        """
+        commit_date = datetime.datetime.strptime(commit['commit']['author']['date'], '%Y-%m-%dT%H:%M:%SZ')
+        return commit_date < date

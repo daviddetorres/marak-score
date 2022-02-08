@@ -23,6 +23,7 @@ class Repo:
         info += "  Owner: {0}\n".format(self.owner)
         info += "  Name: {0}\n".format(self.name)
         info += "  Number of Contributors: {0}\n".format(self.total_contributors)
+        info += "  Number of Commits: {0}\n".format(self.total_commits)
         info += "  Number of Forks: {0}\n".format(self.total_forks)
         info += "  Number of Releases: {0}\n".format(self.total_releases)
         info += "  Number of Issues: {0}\n".format(self.total_issues)
@@ -44,9 +45,11 @@ class Repo:
         Calculate statistics for repo.
         """
         self.total_contributors = self.get_total_contributors()
+        self.total_commits = self.get_total_commits()
         self.total_forks = self.get_total_forks()
         self.total_releases = self.get_total_releases()
         self.total_issues = self.get_total_issues()
+
     
 
     def get_contributors(self):
@@ -90,6 +93,12 @@ class Repo:
     def get_total_contributors(self):
         """
         Return total number of contributors for repo.
+        """
+        pass
+
+    def get_total_commits(self):
+        """
+        Return total number of commits for repo.
         """
         pass
 
